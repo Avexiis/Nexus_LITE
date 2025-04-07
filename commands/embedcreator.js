@@ -1,7 +1,7 @@
 /*******************************************************************************************************
 * @author: Xeon (https://github.com/Avexiis / https://discord.com/users/975580212236521512)
 * @contributor: Thanks to https://github.com/Fantantonio for posting ALL Unicode emojis in JSON format.
-*
+*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
 * The goal of this command is to provide an embed creator for users within discord.
 * There's many web based JSON embed creators out there, but none of them are very mobile friendly.
 * Paired with the /embedextract command, this is a unique tool that makes editing embeds easy.
@@ -236,19 +236,20 @@ module.exports = {
         });
       }
 
-      const previewMessage = await interaction.reply({
-        content: messageContent || '*No message content*',
-        embeds: [currentEmbed],
-        components: [
-          buildRow1(userId),
-          buildCombinedRow2(userId),
-          buildRow3(userId),
-          buildCombinedRow4(userId),
-          buildRow5(userId)
-        ],
-        fetchReply: true,
-        ephemeral: false
-      });
+	const previewMessage = await interaction.reply({
+	   content: messageContent || '*No message content*',
+	   embeds: [currentEmbed],
+       components: [
+       buildRow1(userId),
+       buildCombinedRow2(userId),
+       buildRow3(userId),
+       buildCombinedRow4(userId),
+       buildRow5(userId)
+     ],
+   });
+
+	const fetchedMessage = await interaction.fetchReply();
+
 
       const btnCollector = previewMessage.createMessageComponentCollector({
         componentType: ComponentType.Button,
