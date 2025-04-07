@@ -120,4 +120,4 @@ This project took weeks to create and months to perfect. Redistribution is allow
 ## Support
 
 Support for this bot is limited. If you have any questions, please reach out via the Discord server:  
-[Nexus Development](https://discord.gg/BcfV8jbqxS)
+[Nexus Development](https://discord.gg/SxbFZYvPQE)
