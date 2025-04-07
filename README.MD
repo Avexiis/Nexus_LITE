@@ -28,8 +28,8 @@ Usage on Linux or other versions of Windows may vary or not function as expected
      - Bot token
      - Application client ID
      - Operator ID (this should be a Discord user ID representing the host, developer, etc.)
-   - The Operator ID grants access to the command reload functions.
-     Sample:
+     - The Operator ID grants access to the command reload functions.
+    - Sample:
      ```
      BOT_TOKEN=Token_From_Dev_Portal
      CLIENT_ID=Client_ID_From_Dev_Portal
