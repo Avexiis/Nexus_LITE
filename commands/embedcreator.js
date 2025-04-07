@@ -246,8 +246,8 @@ module.exports = {
           buildCombinedRow4(userId),
           buildRow5(userId)
         ],
-        fetchReply: true,
-        ephemeral: false
+        fetchReply: true, //this and the one below it appear to be deprecated but I cannot for the life of me find a workaround.
+        ephemeral: false //They work, but may toss a warning. In some cases the ephemeral confirmation message that the embed was sent may not show.
       });
 
       const btnCollector = previewMessage.createMessageComponentCollector({
