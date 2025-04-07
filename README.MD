@@ -50,7 +50,7 @@ Usage on Linux or other versions of Windows may vary or not function as expected
    - **Clone the Repository:**  
      Open a command prompt and run:
      ```bash
-     git clone https://github.com/<yourusername>/Nexus-LITE.git
+     git clone https://github.com/Avexiis/Nexus-LITE.git
      ```
    - **Navigate to the Project Directory:**  
      ```bash
