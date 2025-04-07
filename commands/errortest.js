@@ -5,6 +5,7 @@
 * I made it to test the web logging in the full version of this bot.
 * You will really have no need for it, which is why it's disabled.                          add a slash ↓ below the arrow to enable the file.
 ********************************************************************************************************
+require('dotenv').config();
 const { SlashCommandBuilder } = require('discord.js');
 const { xeonLog } = require('../utils/logger.js');
 
@@ -13,16 +14,9 @@ module.exports = {
         .setName('errortest')
         .setDescription('Triggers a test error with a stack trace.'),
     async execute(interaction) {
-        const userId = 'PLACEHOLDER'; //Bot owner (or developer) user ID goes here.
-        
-        if (interaction.user.id !== userId) {
-            return interaction.reply({
-                content: 'You do not have permission to use this command.',
-                ephemeral: true
-            });
-        }
-
-        try {
+      if (interaction.user.id !== process.env.OPERATOR) {
+        return await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+      } try {
             throw new Error('This is a test error for stack trace logging!');
         } catch (error) {
             xeonLog('ERROR', error);
@@ -34,4 +28,3 @@ module.exports = {
         }
     },
 };
-*/
