@@ -236,20 +236,19 @@ module.exports = {
         });
       }
 
-	const previewMessage = await interaction.reply({
-	   content: messageContent || '*No message content*',
-	   embeds: [currentEmbed],
-       components: [
-       buildRow1(userId),
-       buildCombinedRow2(userId),
-       buildRow3(userId),
-       buildCombinedRow4(userId),
-       buildRow5(userId)
-     ],
-   });
-
-	const fetchedMessage = await interaction.fetchReply();
-
+      const previewMessage = await interaction.reply({
+        content: messageContent || '*No message content*',
+        embeds: [currentEmbed],
+        components: [
+          buildRow1(userId),
+          buildCombinedRow2(userId),
+          buildRow3(userId),
+          buildCombinedRow4(userId),
+          buildRow5(userId)
+        ],
+        fetchReply: true,
+        ephemeral: false
+      });
 
       const btnCollector = previewMessage.createMessageComponentCollector({
         componentType: ComponentType.Button,
