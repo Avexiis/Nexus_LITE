@@ -42,7 +42,7 @@ Usage on Linux or other versions of Windows may vary or not function as expected
 
 4. **Logger and Info Command:**
    - The logger file and info command are obfuscated to prevent easy modifications or removal of credits.
-   - Although this project is open source, a mark of ownership is retained. Overcoming the obfuscation is a challenge – if you manage to defeat it, you win and may change the credits in the info command as you please! That said, please leave this file and inline credits intact.
+   - Although this project is open source, a mark of ownership is retained. Overcoming the obfuscation is a challenge – if you manage to defeat it, you win and may change the credits in the info command as you please! That said, please leave this README file and inline credits intact.
 
 5. **Installation on Windows:**
    - **Download and Install Node.js:**  
@@ -113,7 +113,7 @@ Usage on Linux or other versions of Windows may vary or not function as expected
 
 ## Credits
 
-The only component not developed by the author is the file `/data/all-emojis.json`, which was sourced from [Fantantonio](https://github.com/Fantantonio).  
+The only component not developed by me is the file `/data/all-emojis.json`, which was sourced from [Fantantonio](https://github.com/Fantantonio).  
 This project took weeks to create and months to perfect. Redistribution is allowed as long as inline credits and this README file remain intact.
 
 ## Support
