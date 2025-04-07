@@ -3,7 +3,7 @@
 *
 * This file is for test purposes. It generates an intentional error.
 * I made it to test the web logging in the full version of this bot.
-* You will really have no need for it, which is why it's disabled.                          add a slash ↓ below the arrow to enable the file.
+* You will really have no need for it, which is why it's disabled.
 ********************************************************************************************************
 require('dotenv').config();
 const { SlashCommandBuilder } = require('discord.js');
@@ -28,3 +28,4 @@ module.exports = {
         }
     },
 };
+*/
