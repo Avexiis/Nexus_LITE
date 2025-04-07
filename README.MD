@@ -1,6 +1,7 @@
 # Nexus LITE by Xeon
 
-Thank you for downloading Nexus LITE by Xeon. Please review the following information and requirements to get started.
+Nexus LITE is the public release version of the full Nexus ticket/moderation/utility bot used in the AutoLobbies Discord server.
+Please review the following information and requirements to get started.
 
 ## Requirements
 
@@ -30,11 +31,11 @@ Usage on Linux or other versions of Windows may vary or not function as expected
      - Operator ID (this should be a Discord user ID representing the host, developer, etc.)
      - The Operator ID grants access to the command reload functions.
      - Sample:
-      ```
-      BOT_TOKEN=Token_From_Dev_Portal
-      CLIENT_ID=Client_ID_From_Dev_Portal
-      OPERATOR=Owner_or_Developer_ID
-      ```
+       ```
+       BOT_TOKEN=Token_From_Dev_Portal
+       CLIENT_ID=Client_ID_From_Dev_Portal
+       OPERATOR=Owner_or_Developer_ID
+       ```
 
 3. **Bot Configuration:**
    - While a basic understanding of JavaScript is recommended, it is not required.
