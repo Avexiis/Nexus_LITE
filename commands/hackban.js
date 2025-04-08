@@ -8,7 +8,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('hackban')
     .setDescription('Ban a user by ID who is not in the server.')
-    .setDefaultMemberPermissions(PermissionsBitField.Flags.BanMembers)
+    .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator)
     .addStringOption(option =>
       option.setName('user_id')
         .setDescription('The ID of the user to ban')
