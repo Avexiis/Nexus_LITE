@@ -55,7 +55,7 @@ module.exports = {
       if (asFileOption || jsonString.length > 1900) {
         const buffer = Buffer.from(jsonString, 'utf8');
         return interaction.editReply({
-          content: 'Embed JSON data is too large to display here, sending as file:',
+          content: '"Send as file" option selected, or the embed JSON data is too large to display here, sending as file:',
           files: [{
             attachment: buffer,
             name: 'embed.json'
