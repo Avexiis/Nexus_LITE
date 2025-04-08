@@ -7,6 +7,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('say')
     .setDescription('Send a message as the bot to a specified channel.')
+    .setDMPermission(false)
     .addStringOption(option =>
       option.setName('text')
         .setDescription('The message to send.')
@@ -19,6 +20,13 @@ module.exports = {
     ),
   
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true,
+      });
+    }
+
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
       return interaction.reply({
         content: 'You do not have the required permission to use this command.',

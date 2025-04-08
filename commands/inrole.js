@@ -9,12 +9,20 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('inrole')
     .setDescription('List all users in a specified role, or those with no roles if none is provided.')
+    .setDMPermission(false)
     .addRoleOption(option =>
       option.setName('role')
         .setDescription('Select a role to list users for. Leave empty to search for users with no roles.')
         .setRequired(false)),
 
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true,
+      });
+    }
+    
     const selectedRole = interaction.options.getRole('role');
     const member = interaction.member;
 
@@ -58,7 +66,7 @@ module.exports = {
         }
       }
 
-      const itemsPerPage = 20; //Users per page
+      const itemsPerPage = 20; // Users per page
       const totalPages = Math.ceil(roleMembers.length / itemsPerPage);
       let currentPage = 0;
 

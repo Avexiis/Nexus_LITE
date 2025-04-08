@@ -9,6 +9,7 @@ module.exports = {
     .setName('timeout')
     .setDescription('Timeout a user.')
     .setDefaultMemberPermissions(PermissionsBitField.Flags.ModerateMembers)
+    .setDMPermission(false)
     .addUserOption(option =>
       option.setName('target')
         .setDescription('The user to timeout')
@@ -23,10 +24,17 @@ module.exports = {
           { name: '10 minutes', value: '600' },
           { name: '1 hour', value: '3600' },
           { name: '1 day', value: '86400' },
-          { name: '1 week', value: '604800' },
+          { name: '1 week', value: '604800' }
         )),
 
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true,
+      });
+    }
+
     const target = interaction.options.getUser('target');
     const durationSeconds = parseInt(interaction.options.getString('duration'), 10);
 
@@ -36,7 +44,6 @@ module.exports = {
       await interaction.reply({ content: `${target.tag} has been timed out for ${durationSeconds} seconds.`, ephemeral: true });
     } catch (error) {
       xeonLog('error', `Failed to timeout ${target.tag}: ${error.message}`);
-      
       await interaction.reply({ content: `Failed to timeout ${target.tag}: ${error.message}`, ephemeral: true });
     }
   },

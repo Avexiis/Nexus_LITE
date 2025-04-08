@@ -1,7 +1,7 @@
 /*******************************************************************************************************
 * @author: Xeon (https://github.com/Avexiis / https://discord.com/users/975580212236521512)
 * @contributor: Thanks to https://github.com/Fantantonio for posting ALL Unicode emojis in JSON format.
-*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
+*
 * The goal of this command is to provide an embed creator for users within discord.
 * There's many web based JSON embed creators out there, but none of them are very mobile friendly.
 * Paired with the /embedextract command, this is a unique tool that makes editing embeds easy.
@@ -181,9 +181,13 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('embedcreator')
     .setDescription('Interactively create and modify an embed.')
-    .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels),
+    .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
+	.setDMPermission(false),
 
   async execute(interaction, client) {
+	if (!interaction.guild) {
+      return interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
+    }
     try {
       const userId = interaction.user.id;
       let messageContent = '';

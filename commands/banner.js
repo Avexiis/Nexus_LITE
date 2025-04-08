@@ -6,9 +6,17 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('banner')
-    .setDescription('Displays the server banner image.'),
+    .setDescription('Displays the server banner image.')
+    .setDMPermission(false),
 
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true
+      });
+    }
+
     if (!interaction.guild.bannerURL()) {
       return interaction.reply({ content: 'This server does not have a banner set.', ephemeral: true });
     }

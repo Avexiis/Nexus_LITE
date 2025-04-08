@@ -12,12 +12,20 @@ module.exports = {
     .setName('kickrole')
     .setDescription('Kick all members with a specific role.')
     .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator)
+    .setDMPermission(false)
     .addRoleOption(option =>
       option.setName('role')
         .setDescription('The role whose members should be kicked')
         .setRequired(true)),
 
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true,
+      });
+    }
+    
     const role = interaction.options.getRole('role');
     await interaction.deferReply({ ephemeral: true });
     await interaction.guild.members.fetch();

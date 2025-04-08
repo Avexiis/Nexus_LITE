@@ -12,6 +12,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('userinfo')
     .setDescription('Get detailed information about a user.')
+    .setDMPermission(false)
     .addUserOption(option => 
       option.setName('user')
         .setDescription('Select a user to view information about.')
@@ -19,13 +20,20 @@ module.exports = {
     ),
     
   async execute(interaction) {
-	if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true
+      });
+    }
+    
+    if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
       return await interaction.reply({
         content: 'You do not have permission to use this command.',
         ephemeral: true
       });
     }
-	
+    
     await interaction.deferReply();
 
     const targetUser = interaction.options.getUser('user');

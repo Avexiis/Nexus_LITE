@@ -6,7 +6,8 @@ const { SlashCommandBuilder, EmbedBuilder, ChannelType, PermissionsBitField } = 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('serverinfo')
-    .setDescription('Get detailed information about this server.'),
+    .setDescription('Get detailed information about this server.')
+	.setDMPermission(false),
   
   async execute(interaction) {
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {

@@ -9,6 +9,7 @@ module.exports = {
     .setName('unban')
     .setDescription('Unban a user from the server.')
     .setDefaultMemberPermissions(PermissionsBitField.Flags.BanMembers)
+    .setDMPermission(false)
     .addStringOption(option =>
       option.setName('user_id')
         .setDescription('The ID of the user to unban')
@@ -19,6 +20,13 @@ module.exports = {
         .setRequired(false)),
 
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true,
+      });
+    }
+    
     const userId = interaction.options.getString('user_id');
     const reason = interaction.options.getString('reason') || 'No reason provided';
 

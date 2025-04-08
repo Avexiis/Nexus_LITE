@@ -8,12 +8,20 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('inchannel')
     .setDescription('List all users with access to a specified channel (Admins only).')
+    .setDMPermission(false)
     .addChannelOption(option =>
       option.setName('channel')
         .setDescription('Select a channel to list users for.')
         .setRequired(true)),
   
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true,
+      });
+    }
+    
     const selectedChannel = interaction.options.getChannel('channel');
     const member = interaction.member;
 

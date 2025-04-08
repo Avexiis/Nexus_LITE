@@ -7,6 +7,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('embedextract')
     .setDescription('Extract embed JSON data from a given message URL.')
+    .setDMPermission(false)
     .addStringOption(option =>
       option.setName('message_url')
         .setDescription('The URL of the message containing the embed.')
@@ -16,12 +17,20 @@ module.exports = {
         .setDescription('If true, the embed JSON will be sent as a text file instead of in the message.')),	
   
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true,
+      });
+    }
+    
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
       return interaction.reply({
         content: 'You do not have the required permission to manage messages to use this command.',
         ephemeral: true,
       });
-    }  
+    }
+    
     await interaction.deferReply();
 
     const messageUrl = interaction.options.getString('message_url');

@@ -9,6 +9,7 @@ module.exports = {
     .setName('ban')
     .setDescription('Ban a user from the server.')
     .setDefaultMemberPermissions(PermissionsBitField.Flags.BanMembers)
+    .setDMPermission(false)
     .addUserOption(option =>
       option.setName('target')
         .setDescription('The user to ban')
@@ -25,19 +26,25 @@ module.exports = {
           { name: '4 days', value: 4 },
           { name: '5 days', value: 5 },
           { name: '6 days', value: 6 },
-          { name: '7 days', value: 7 },
+          { name: '7 days', value: 7 }
         )),
-
+  
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true
+      });
+    }
+
     const target = interaction.options.getUser('target');
     const days = interaction.options.getInteger('days') || 0;
 
     try {
-      await interaction.guild.members.ban(target.id, { days, reason: `Banned by ${interaction.user.tag}` }); //byeeeeeeeeee
+      await interaction.guild.members.ban(target.id, { days, reason: `Banned by ${interaction.user.tag}` });
       await interaction.reply({ content: `${target.tag} has been banned.`, ephemeral: true });
       
       xeonLog('info', `${target.tag} was banned by ${interaction.user.tag} for ${days} days of message deletion.`);
-      
     } catch (error) {
       xeonLog('error', `Failed to ban ${target.tag}: ${error.message}`);
       

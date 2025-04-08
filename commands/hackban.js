@@ -8,6 +8,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('hackban')
     .setDescription('Ban a user by ID who is not in the server.')
+    .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator)
     .addStringOption(option =>
       option.setName('user_id')
@@ -25,10 +26,17 @@ module.exports = {
           { name: '4 days', value: 4 },
           { name: '5 days', value: 5 },
           { name: '6 days', value: 6 },
-          { name: '7 days', value: 7 },
+          { name: '7 days', value: 7 }
         )),
 
   async execute(interaction) {
+    if (!interaction.guild) {
+      return interaction.reply({
+        content: 'This command can only be used in a server.',
+        ephemeral: true,
+      });
+    }
+    
     const userId = interaction.options.getString('user_id');
     const days = interaction.options.getInteger('days') || 0;
 
