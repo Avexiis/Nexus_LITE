@@ -8,7 +8,8 @@ const { xeonLog } = require('../utils/logger');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('resourceusage')
-    .setDescription('Displays resource usage of the bot and system.'),
+    .setDescription('Displays resource usage of the bot and system.')
+	.setDMPermission(false),
   async execute(interaction) {
 	if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
         return interaction.reply({

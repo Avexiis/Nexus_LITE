@@ -8,7 +8,8 @@ const { xeonLog } = require('../utils/logger');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('commands')
-    .setDescription('Displays a list of available commands.'),
+    .setDescription('Displays a list of available commands.')
+	.setDMPermission(false),
   async execute(interaction) {
     const developerBlock = `__***Developer Commands***__
 🚫 __**Cmdreload**__

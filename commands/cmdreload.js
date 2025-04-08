@@ -14,6 +14,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('cmdreload')
     .setDescription('Reloads slash commands. Optionally reload a specific command or only new ones.')
+	.setDMPermission(false)
     .addStringOption(option =>
       option.setName('command')
             .setDescription('Select a command to reload (reload all if empty).')
