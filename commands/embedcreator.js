@@ -89,6 +89,7 @@ function buildRow1(userId) {
     new ButtonBuilder().setCustomId(`btn_url_${userId}`).setLabel('URL').setStyle(ButtonStyle.Secondary)
   );
 }
+
 function buildCombinedRow2(userId) {
   return new ActionRowBuilder().addComponents(
     new ButtonBuilder().setCustomId(`btn_image_${userId}`).setLabel('Image').setStyle(ButtonStyle.Secondary),
@@ -98,6 +99,7 @@ function buildCombinedRow2(userId) {
     new ButtonBuilder().setCustomId(`btn_footericon_${userId}`).setLabel('Footer Icon').setStyle(ButtonStyle.Secondary)
   );
 }
+
 function buildRow3(userId) {
   return new ActionRowBuilder().addComponents(
     new ButtonBuilder().setCustomId(`btn_clear_${userId}`).setLabel('Clear').setStyle(ButtonStyle.Danger),
@@ -105,6 +107,7 @@ function buildRow3(userId) {
     new ButtonBuilder().setCustomId(`btn_removefield_${userId}`).setLabel('- Remove field').setStyle(ButtonStyle.Danger)
   );
 }
+
 function buildCombinedRow4(userId) {
   return new ActionRowBuilder().addComponents(
     new ButtonBuilder().setCustomId(`btn_replacejson_${userId}`).setLabel('Replace JSON').setStyle(ButtonStyle.Secondary),
@@ -112,10 +115,11 @@ function buildCombinedRow4(userId) {
     new ButtonBuilder().setCustomId(`btn_delete_${userId}`).setLabel('Delete').setStyle(ButtonStyle.Danger)
   );
 }
+
 function buildRow5(userId) {
   return new ActionRowBuilder().addComponents(
     new ChannelSelectMenuBuilder()
-      .setCustomId(`select_channel_${userId}`)
+      .setCustomId(`select_channel_${userId}_${Date.now()}`)
       .setPlaceholder('Select a channel')
       .setMinValues(1)
       .setMaxValues(1)
@@ -267,7 +271,7 @@ module.exports = {
 
       btnCollector.on('collect', async (btnInteraction) => {
         if (btnInteraction.user.id !== userId) {
-          return btnInteraction.reply({ content: "This menu isn't for you!", ephemeral: false });
+          return btnInteraction.reply({ content: "Only the user who ran the command may interact with the embed creator!", ephemeral: true });
         }
         const customId = btnInteraction.customId;
 
@@ -872,16 +876,12 @@ module.exports = {
 
       selectCollector.on('collect', async (selectInteraction) => {
         if (selectInteraction.user.id !== userId) {
-          return selectInteraction.reply({ content: "This selection isn't for you!", ephemeral: false });
+          return selectInteraction.reply({ content: "Only the user who ran the command may interact with the embed creator!", ephemeral: true });
         }
         const selectedChannelId = selectInteraction.values[0];
         const targetChannel = interaction.guild.channels.cache.get(selectedChannelId);
         if (targetChannel) {
-          if (messageContent && messageContent.trim() !== '') {
-            await targetChannel.send({ content: messageContent, embeds: [currentEmbed] });
-          } else {
-            await targetChannel.send({ embeds: [currentEmbed] });
-          }
+          await targetChannel.send({ content: messageContent || ' ', embeds: [currentEmbed] });
           await safeUpdate(selectInteraction, {
             content: `Embed sent to <#${selectedChannelId}>.`,
             embeds: [currentEmbed],
@@ -889,10 +889,20 @@ module.exports = {
               buildRow1(userId),
               buildCombinedRow2(userId),
               buildRow3(userId),
-              buildCombinedRow4(userId),
-              buildRow5(userId)
+              buildCombinedRow4(userId)
             ]
           });
+          setTimeout(() => {
+            interaction.editReply({
+              components: [
+                buildRow1(userId),
+                buildCombinedRow2(userId),
+                buildRow3(userId),
+                buildCombinedRow4(userId),
+                buildRow5(userId)
+              ]
+            });
+          }, 500);
         } else {
           await safeReply(selectInteraction, { content: 'Invalid channel selected.', ephemeral: true });
         }
