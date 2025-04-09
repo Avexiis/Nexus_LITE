@@ -237,7 +237,7 @@ module.exports = {
         });
       }
 
-      const previewMessage = await interaction.reply({
+      await interaction.reply({
         content: messageContent || '*No message content*',
         embeds: [currentEmbed],
         components: [
@@ -247,9 +247,9 @@ module.exports = {
           buildCombinedRow4(userId),
           buildRow5(userId)
         ],
-        fetchReply: true,
         ephemeral: false
       });
+      const previewMessage = await interaction.fetchReply();
 
       const btnCollector = previewMessage.createMessageComponentCollector({
         componentType: ComponentType.Button,
