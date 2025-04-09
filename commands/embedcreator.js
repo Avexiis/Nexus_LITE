@@ -182,12 +182,9 @@ module.exports = {
     .setName('embedcreator')
     .setDescription('Interactively create and modify an embed.')
     .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
-	.setDMPermission(false),
+    .setDMPermission(false),
 
   async execute(interaction, client) {
-	if (!interaction.guild) {
-      return interaction.reply({ content: 'This command can only be used in a server.', ephemeral: true });
-    }
     try {
       const userId = interaction.user.id;
       let messageContent = '';
@@ -250,8 +247,8 @@ module.exports = {
           buildCombinedRow4(userId),
           buildRow5(userId)
         ],
-        fetchReply: true, //this and the one below it appear to be deprecated but I cannot for the life of me find a workaround.
-        ephemeral: false //They work, but may toss a warning. In some cases the ephemeral confirmation message that the embed was sent may not show.
+        fetchReply: true,
+        ephemeral: false
       });
 
       const btnCollector = previewMessage.createMessageComponentCollector({
@@ -285,7 +282,16 @@ module.exports = {
         // Send JSON
         else if (customId.startsWith('btn_sendjson_')) {
           const jsonData = JSON.stringify(currentEmbed.data, null, 2);
-          await safeReply(btnInteraction, { content: `\`\`\`json\n${jsonData}\n\`\`\``, ephemeral: false });
+          if (jsonData.length > 1900) {
+            const buffer = Buffer.from(jsonData, 'utf8');
+            await safeReply(btnInteraction, {
+              content: 'JSON output is too long; it has been sent as a file instead.',
+              files: [{ attachment: buffer, name: 'embed.json' }],
+              ephemeral: false
+            });
+          } else {
+            await safeReply(btnInteraction, { content: `\`\`\`json\n${jsonData}\n\`\`\``, ephemeral: false });
+          }
           btnCollector.resetTimer();
         }
         // Title
@@ -305,6 +311,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_title_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const newTitle = modalInteraction.fields.getTextInputValue('title_input').trim();
             modalCache.title = newTitle;
             currentEmbed.setTitle(newTitle === "" ? null : newTitle);
@@ -341,6 +349,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_description_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const newDesc = modalInteraction.fields.getTextInputValue('description_input').trim();
             modalCache.description = newDesc;
             currentEmbed.setDescription(newDesc === "" ? null : newDesc);
@@ -377,6 +387,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_messagecontent_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const newMsgContent = modalInteraction.fields.getTextInputValue('msgcontent_input').trim();
             modalCache.messageContent = newMsgContent;
             messageContent = newMsgContent;
@@ -413,6 +425,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_colour_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const newColour = modalInteraction.fields.getTextInputValue('colour_input').trim();
             modalCache.colour = newColour;
             currentEmbed.setColor(newColour === "" ? null : newColour);
@@ -449,6 +463,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_url_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const newURL = modalInteraction.fields.getTextInputValue('url_input').trim();
             if (newURL !== "" && (!isStrictUrl(newURL) || containsIllegalUrlChars(newURL))) {
               return safeReply(modalInteraction, { content: 'The URL contains invalid characters, non-ASCII characters, or emojis.', ephemeral: true });
@@ -488,6 +504,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_image_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const newLink = modalInteraction.fields.getTextInputValue('image_input').trim();
             if (newLink !== "" && (!isValidImageUrl(newLink) || !isStrictUrl(newLink) || containsIllegalUrlChars(newLink))) {
               return safeReply(modalInteraction, { content: 'Please enter a valid image URL without illegal characters, non-ASCII characters, or emojis (jpg, jpeg, png, gif, or webp).', ephemeral: true });
@@ -527,6 +545,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_thumbnail_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const newThumb = modalInteraction.fields.getTextInputValue('thumbnail_input').trim();
             if (newThumb !== "" && (!isValidImageUrl(newThumb) || !isStrictUrl(newThumb) || containsIllegalUrlChars(newThumb))) {
               return safeReply(modalInteraction, { content: 'Please enter a valid thumbnail URL without illegal characters, non-ASCII characters, or emojis (jpg, jpeg, png, gif, or webp).', ephemeral: true });
@@ -566,6 +586,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_author_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const newAuthor = modalInteraction.fields.getTextInputValue('author_input').trim();
             modalCache.author = newAuthor;
             currentEmbed.setAuthor(newAuthor === "" ? null : { name: newAuthor });
@@ -602,6 +624,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_footer_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const newFooter = modalInteraction.fields.getTextInputValue('footer_input').trim();
             modalCache.footer = newFooter;
             if (newFooter === "") {
@@ -649,6 +673,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_footericon_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const newFooterIcon = modalInteraction.fields.getTextInputValue('footericon_input').trim();
             if (newFooterIcon !== "" && (!isValidImageUrl(newFooterIcon) || containsIllegalUrlChars(newFooterIcon))) {
               return safeReply(modalInteraction, { content: 'Please enter a valid footer icon URL without illegal characters or emojis (jpg, jpeg, png, gif, or webp).', ephemeral: true });
@@ -733,6 +759,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_addfield_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const fName = modalInteraction.fields.getTextInputValue('field_name').trim();
             const fValue = modalInteraction.fields.getTextInputValue('field_value').trim();
             if (fName.length > 256) {
@@ -798,6 +826,8 @@ module.exports = {
           try {
             const modalInteraction = await awaitModalSubmission(`modal_replacejson_${userId}`, 2 * 60 * 1000);
             if (!modalInteraction) return;
+            if (!activeEmbedCreators.has(userId))
+              return safeReply(modalInteraction, { content: "This session has expired.", ephemeral: true });
             const rawJson = modalInteraction.fields.getTextInputValue('json_input').trim();
             if (rawJson[0] !== '{' || rawJson.slice(-1) !== '}') {
               return safeReply(modalInteraction, { content: 'JSON must begin with `{` and end with `}`.\nPlease check your syntax or use `/embedextract` to get the valid JSON for an existing embed to be edited.' , ephemeral: true });
